@@ -88,14 +88,18 @@ Stone getNextStone(istream& inFile) {
 }
 
 vector<Stone> buildSortedStoneStack(Stone& stoneStack) {
+    //Use a sorting algorithm; this attempt to build from scratch isn't going to work efficiently
     int minimumLossValue = 1000000000; //1 billion should be the upper boundary based on limits of 100 stones, 100 seconds per stone, and 10000 lossrate
     vector<Stone> sortedStack;
     for (Stone nextInPile : stoneStack) {
         if (nextInPile.getLossValue() < minimumLossValue) {
             sortedStack.push_back(nextInPile);
+            minimumLossValue = nextInPile.getLossValue();
         }
         else if (nextInPile.getLossValue() == minimumLossValue) {
-
+            if (nextInPile.getEnergy() < sortedStack.back().getEnergy()) {
+                sortedStack.insert((sortedStack.back() - 1), nextInPile); //What's the fastest way to put this stone in front of the last stone? TODO: Fix for three or more stones all with same lossValue
+            }
         }
     }
 }
